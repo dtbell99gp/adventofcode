@@ -47,7 +47,6 @@ const getScore = (opponentChoice, myChoice) => {
 const getTotalScore = (rows) => {
   let totalScore = 0;
   for (const row of rows) {
-    console.log(row);
     const actions = row.split(" ");
     const action = `${actions[0]}${actions[1]}`;
     const opponent = actions[0];
@@ -60,8 +59,6 @@ const getTotalScore = (rows) => {
 
 const dta = fs.readFileSync("./Day2.txt", { encoding: "utf8" });
 const totalScore = getTotalScore(dta.split("\n"));
-
-console.log("totalScore:", totalScore);
 
 module.exports = {
   getScore,

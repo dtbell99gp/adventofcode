@@ -48,6 +48,5 @@ test("should produce correct array of most calories from collection", () => {
     "1000",
   ];
   const result = findTotalCalories(rows);
-  console.log(result);
   expect(result.mostTopThree).toBe(47000);
 });

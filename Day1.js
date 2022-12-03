@@ -12,7 +12,6 @@ const findTotalCalories = (rows) => {
       if (calories > mostCalories) {
         mostCalories = calories;
         mostElf = elf;
-        console.log(mostElf, calories, mostCalories);
       }
       caloriesArray.push(calories);
       calories = 0;
@@ -28,9 +27,9 @@ const findTotalCalories = (rows) => {
   return { mostElf, mostCalories, mostTopThree, caloriesArray };
 };
 
-const data = fs.readFileSync("./day1.txt", { encoding: "utf8" });
-const rows = data.split("\n");
-const result = findTotalCalories(rows);
-console.log(result);
+// const data = fs.readFileSync("./day1.txt", { encoding: "utf8" });
+// const rows = data.split("\n");
+// const result = findTotalCalories(rows);
+// console.log(result);
 
 module.exports = { findTotalCalories };
