@@ -30,6 +30,5 @@ const findTotalCalories = (rows) => {
 // const data = fs.readFileSync("./day1.txt", { encoding: "utf8" });
 // const rows = data.split("\n");
 // const result = findTotalCalories(rows);
-// console.log(result);
 
 module.exports = { findTotalCalories };
