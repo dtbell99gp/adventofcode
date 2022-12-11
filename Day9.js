@@ -1,69 +1,126 @@
 const fs = require("fs");
 
-const solution1 = (moves) => {
+const updatePositions = (positions, cntr, xDiff, yDiff, direction) => {
+  if (direction === "L" || direction === "R") {
+    if (xDiff === -2) {
+      positions[cntr + 1].x--;
+      if (yDiff !== 0) {
+        positions[cntr + 1].y = positions[cntr].y;
+      }
+    } else if (xDiff === 2) {
+      positions[cntr + 1].x++;
+      console.log(cntr, "++", positions[cntr], positions[cntr + 1]);
+      if (yDiff !== 0) {
+        positions[cntr + 1].y = positions[cntr].y;
+      }
+    } else if (yDiff === -2) {
+      positions[cntr + 1].y--;
+      if (xDiff !== 0) {
+        positions[cntr + 1].x = positions[cntr].x;
+      }
+    } else if (yDiff === 2) {
+      positions[cntr + 1].y++;
+      if (xDiff !== 0) {
+        positions[cntr + 1].x = positions[cntr].x;
+      }
+    }
+  }
+
+  if (direction === "U" || direction === "D") {
+    if (yDiff === -2) {
+      positions[cntr + 1].y--;
+      if (xDiff !== 0) {
+        positions[cntr + 1].x = positions[cntr].x;
+      }
+    } else if (yDiff === 2) {
+      positions[cntr + 1].y++;
+      if (xDiff !== 0) {
+        positions[cntr + 1].x = positions[cntr].x;
+      }
+    } else if (xDiff === -2) {
+      positions[cntr + 1].x--;
+      if (yDiff !== 0) {
+        positions[cntr + 1].y = positions[cntr].y;
+      }
+    } else if (xDiff === 2) {
+      positions[cntr + 1].x++;
+      console.log(cntr, "++", positions[cntr], positions[cntr + 1]);
+      if (yDiff !== 0) {
+        positions[cntr + 1].y = positions[cntr].y;
+      }
+    }
+  }
+};
+
+const solution1 = (moves, knots) => {
   const spots = new Set();
-  let hX = 0;
-  let hY = 0;
-  let tX = 0;
-  let tY = 0;
+
+  const positions = [];
+
+  for (let i = 0; i < knots; i++) {
+    const p = { x: 0, y: 0 };
+    positions.push(p);
+  }
+
+  let runs = 0;
+  let letmoves = 0;
   for (const move of moves) {
+    letmoves++;
+    if (letmoves === 127) {
+      console.log("here");
+    }
     const direction = move.split(" ")[0];
     const steps = parseInt(move.split(" ")[1]);
     console.log(direction, steps);
-    console.log("---------");
+    console.log("start:", positions);
     for (let i = 0; i < steps; i++) {
       if (direction === "R") {
-        hX++;
+        positions[0].x++;
       }
       if (direction === "L") {
-        hX--;
+        positions[0].x--;
       }
       if (direction === "U") {
-        hY++;
+        positions[0].y++;
       }
       if (direction === "D") {
-        hY--;
+        positions[0].y--;
       }
 
-      console.log("b: ", hX, hY, ",", tX, tY);
+      let cntr = 0;
 
-      let needToMove = true;
-      while (needToMove) {
-        const xDiff = hX - tX;
-        const yDiff = hY - tY;
-        if (xDiff > -2 && xDiff < 2 && yDiff > -2 && yDiff < 2) {
-          // all is well, return to next move
-          needToMove = false;
-        } else {
-          if (yDiff === -2) {
-            tY--;
-            if (xDiff !== 0) {
-              tX = hX;
-            }
-          } else if (yDiff === 2) {
-            tY++;
-            if (xDiff !== 0) {
-              tX = hX;
-            }
-          } else if (xDiff === -2) {
-            tX--;
-            if (yDiff !== 0) {
-              tY = hY;
-            }
-          } else if (xDiff === 2) {
-            tX++;
-            if (yDiff !== 0) {
-              tY = hY;
-            }
+      while (cntr < knots - 1) {
+        let needToMove = true;
+
+        while (needToMove) {
+          const xDiff = positions[cntr].x - positions[cntr + 1].x;
+          const yDiff = positions[cntr].y - positions[cntr + 1].y;
+          runs++;
+          if (xDiff < -2 || xDiff > 2 || yDiff < -2 || yDiff > 2) {
+            console.log("positions", positions);
+            console.log("letmoves:", letmoves);
+            console.log("cntr:", cntr);
+            console.log("move:", move);
+            console.log("runs:" + runs);
+            process.exit();
+          }
+
+          if (xDiff > -2 && xDiff < 2 && yDiff > -2 && yDiff < 2) {
+            needToMove = false;
+          } else {
+            updatePositions(positions, cntr, xDiff, yDiff, direction);
+          }
+          if (cntr > 0 && positions[cntr - 1].x - positions[cntr].x > 2) {
+            console.log("here");
           }
         }
+        cntr++;
       }
 
+      const tX = positions[positions.length - 1].x;
+      const tY = positions[positions.length - 1].y;
       const spot = `${tX}_${tY}`;
       spots.add(spot);
-
-      console.log("a: ", hX, hY, ",", tX, tY);
-      console.log("");
     }
   }
   return spots.size;
@@ -72,11 +129,11 @@ const solution1 = (moves) => {
 const main = () => {
   const dta = fs.readFileSync("./Day9real.txt", { encoding: "utf8" });
   const steps = dta.split("\n");
-  const result = solution1(steps);
+  const result = solution1(steps, 10);
   console.log(result);
 };
 
-main();
+//main();
 
 module.exports = {
   solution1,
